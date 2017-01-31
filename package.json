@@ -1,0 +1,21 @@
+{
+  "name": "chess-move-lister",
+  "version": "1.0.0",
+  "description": "code challege : lists all possible chess moves given a board and whose turn it is.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "webpack -d && cp src/index.html dist/index.html && webpack-dev-server --content-base src/ --inline --hot",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@jtyler-dev:jtyler-dev/ChessMoveList.git"
+  },
+  "author": "jtyler",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
+  }
+}
