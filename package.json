@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run dev",
-    "dev": "webpack -d && cp src/index.html dist/index.html && webpack-dev-server --content-base src/ --inline --hot",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "webpack -d && cp src/index.html dist/index.html && cp src/styles.css dist/styles.css && webpack-dev-server --content-base src/ --inline --hot",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copyStaticFiles": "cp src/index.html dist/index.html && cp src/styles.css dist/styles.css"
   },
   "repository": {
     "type": "git",

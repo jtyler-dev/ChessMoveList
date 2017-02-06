@@ -1,9 +1,5 @@
 // repersentation of a chess board object in js
 "use strict";
-
-// todo:
-// implement FEN Notation https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-// implement position mapping? IE, a1 b1 etc https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
 var mcUtility = require('./moveCalculationUtility');
 
 var board = (function () {
@@ -15,6 +11,7 @@ var board = (function () {
     var turn = 'w'; // default starting side
     var MAX_SQ = 8;
 
+    // create and initalize chess board
     var createBoard = function(FENStr) {
         if (!board) {
             board = new Array(MAX_SQ);
@@ -24,7 +21,7 @@ var board = (function () {
                     board[i][j] = {};
                 }
             }
-
+            // no fen provided, load default board
             if (!FENStr) {
                 loadFen(defaultBoard);
             } else {
@@ -33,6 +30,7 @@ var board = (function () {
         }
     };
 
+    // helper method used to see the board repersentation
     var printBoard = function() {
         var boardStr = "";
 
@@ -57,11 +55,84 @@ var board = (function () {
         console.log(boardStr);
     };
 
+    // validates a fen string to make sure that it is in the correct format
+    // for the app to process
+    var validateFEN = function(fenStr) {
+        var tokens = fenStr.split(/\s+/);
+        var pieces = tokens[0].split('/');
+        var turn = tokens[1];
+        var isValid = true;
+        var prevIsNum = false;
+        var row, piece, rowSum;
+        var errString = "";
+
+
+        // check to see if basic format is there
+        if(tokens.length < 2) {
+            isValid = false;
+            errString = "FEN string is not correctly formatted";
+        }
+
+        //check to see if we have the correct turn
+        if(isValid && !(turn !== "w" || turn !== "b")) {
+            errString = "FEN string contains invalid turn character"
+            isValid = false;
+        }
+
+        // check to see if fen has the correct number of rows
+        if(isValid && pieces.length === 8) {
+            // check each row
+            for(var i = 0; i < pieces.length; i ++) {
+                row = pieces[i];
+                rowSum = 0;
+
+                // check each piece in the row
+                for(var j = 0; j < row.length; j++) {
+                    piece = row[j];
+                    //check if character is a number or not
+                    if(!isNaN(piece)){
+                        // it is a number
+                        //check if we have had 2 numbers in a row
+                        if(prevIsNum) {
+                            errString = "FEN string contains invalid Row : 2 numbers consecutively in a row";
+                            isValid = false;
+                            break;
+                        }
+
+                        rowSum += parseInt(piece);
+                        prevIsNum = true;
+
+                    } else if(/^[prnbqkPRNBQK]$/.test(piece)){
+                        // regex expression to check if the character is within the valid set of
+                        // characters
+                        prevIsNum = false;
+                        rowSum += 1;
+                    } else {
+                        // we have a character that is
+                        errString = "FEN string contains invalid character";
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                prevIsNum = false;
+                if(!isValid || rowSum != 8) {
+                    break;
+                }
+            }
+        } else if(isValid) {
+            errString = "FEN string does not contain correct ammount of rows";
+            isValid = false;
+        }
+
+        return {'isValid': isValid, 'errString': errString};
+    };
+
+    // takes a fen string, processess it, and loads it
     var loadFen = function (fen) {
         var tokens = fen.split(/\s+/);
         var pieces = tokens[0].split('/');
         turn = tokens[1];
-        // todo validation ?
 
         for(var i=0; i < pieces.length; i ++) {
             var rowPieces = pieces[i];
@@ -84,7 +155,8 @@ var board = (function () {
         }
     };
 
-    var findPiece = function(row, col) {
+    //gets the piece at the given position of the board
+    var getPiece = function(row, col) {
         var piece;
         var retObj = {};
         if((row >= 0 && row < 8) && (col >= 0 && col < 8)) {
@@ -113,6 +185,7 @@ var board = (function () {
         return colLetter[col] + rowNum[row];
     };
 
+    // creates more meaningful output for the user to read about the valid moves
     var humanReadableOutput = function(movesList) {
         var moveDirection = ["", "diagonal down left ", "down ", "diagonal down right ",
                              "left ", "-", "right ", "diagonal up left ", "up ",
@@ -146,11 +219,12 @@ var board = (function () {
         return moveList;
     };
 
+    // calculates the valid moves on the board
     var caluclateValidMoves = function() {
         var allMoves = [];
         for(var row = 0; row < MAX_SQ; row++) {
             for(var col = 0; col < MAX_SQ; col++){
-                var pieceLoc = findPiece(row, col);
+                var pieceLoc = getPiece(row, col);
                 var piece = pieceLoc.piece ? pieceLoc.piece : null;
 
                 if(piece && piece.color === turn) {
@@ -163,6 +237,8 @@ var board = (function () {
         return allMoves;
     };
 
+    // calculates the valid moves for the turn on the board,
+    // returns everything in human reable output
     var caluclateValidMovesHR = function(){
         var allMoves = this.caluclateValidMoves();
         var moveList = this.humanReadableOutput(allMoves);
@@ -170,16 +246,23 @@ var board = (function () {
         return moveList;
     };
 
+    // returns the current turn
+    var currentTurn = function() {
+        return turn === 'w' ? 'white' : 'black';
+    };
+
     return {
         createBoard: createBoard,
         printBoard: printBoard,
-        findPiece: findPiece,
+        getPiece: getPiece,
         loadFen: loadFen,
+        validateFEN: validateFEN,
         clearBoard: clearBoard,
         caluclateValidMoves: caluclateValidMoves,
         mapBoardPosition: mapBoardPosition,
         caluclateValidMovesHR: caluclateValidMovesHR,
-        humanReadableOutput:humanReadableOutput
+        humanReadableOutput:humanReadableOutput,
+        currentTurn:currentTurn
     };
 });
 

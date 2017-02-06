@@ -21,17 +21,22 @@ var chessMoveCalculator = (function () {
         var resultsDiv = $('#valid-move-display');
         var fenStr = $('#fenStr').val();
         var validMoves;
+        var validFen = chessBoard.validateFEN(fenStr);
+
         resultsDiv.html('');
-        chessBoard.clearBoard();
-        chessBoard.loadFen(fenStr);
-        chessBoard.printBoard();
-        validMoves = chessBoard.caluclateValidMovesHR();
-        console.log(validMoves);
+        if(validFen.isValid) {
+            chessBoard.clearBoard();
+            chessBoard.loadFen(fenStr);
+            chessBoard.printBoard();
+            validMoves = chessBoard.caluclateValidMovesHR();
+            resultsDiv.append('<div>Current turn is : ' + chessBoard.currentTurn() + '</div>');
 
-        for(var i = 0; i < validMoves.length; i++){
-            resultsDiv.append('<div>' + validMoves[i] + '</div>');
+            for(var i = 0; i < validMoves.length; i++){
+                resultsDiv.append('<div>' + validMoves[i] + '</div>');
+            }
+        } else {
+            resultsDiv.append('<div>Given FEN string is not valid : ' + validFen.errString + '</div>');
         }
-
 
     };
 

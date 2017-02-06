@@ -59,7 +59,7 @@ var moveCalculationUtility = (function (){
                     }
 
                     // move within the boundries of the board
-                    var spaceLoc = board.findPiece(posX, posY);
+                    var spaceLoc = board.getPiece(posX, posY);
 
                     // if space is empty
                     if(isEmptyLoc(spaceLoc)) {
@@ -150,8 +150,8 @@ var moveCalculationUtility = (function (){
                 // if the space infront of the pawn is clear and the space
                 // 2 tiles ahead of the pawn is clear, moving 2 spaces from the starting
                 // rank is valid
-                if(isEmptyLoc(board.findPiece(row + direction, col)) &&
-                   isEmptyLoc(board.findPiece(row + (2 * direction), col))) {
+                if(isEmptyLoc(board.getPiece(row + direction, col)) &&
+                   isEmptyLoc(board.getPiece(row + (2 * direction), col))) {
                     validMoves.push({'piece': pieceLoc.piece.piece,
                                      'pieceLoc':pieceLoc.location,
                                      'moveDir': (direction > 0) ? 2 : 8,
@@ -164,7 +164,7 @@ var moveCalculationUtility = (function (){
             // pawn movement is 1 space infront of it
             var move = row + direction;
             // check if pawn can move 1 space infront of it
-            if(checkOnBoard(move, col) && isEmptyLoc(board.findPiece(move,col))) {
+            if(checkOnBoard(move, col) && isEmptyLoc(board.getPiece(move,col))) {
                 validMoves.push({'piece': pieceLoc.piece.piece,
                                  'pieceLoc':pieceLoc.location,
                                  'moveDir': (direction > 0) ? 2 : 8,
@@ -174,8 +174,8 @@ var moveCalculationUtility = (function (){
             // pawn can also more diagonal if it takes a piece
             // check it pawn can take piece that
             if(checkOnBoard(move, col + 1) &&
-               !isEmptyLoc(board.findPiece(move, col + 1)) &&
-               checkIfTakable(board.findPiece(move, col + 1))){
+               !isEmptyLoc(board.getPiece(move, col + 1)) &&
+               checkIfTakable(board.getPiece(move, col + 1))){
                 validMoves.push({'piece': pieceLoc.piece.piece,
                                  'pieceLoc':pieceLoc.location,
                                  'moveDir': (direction > 0) ? 3 : 9,
@@ -183,8 +183,8 @@ var moveCalculationUtility = (function (){
             }
 
             if(checkOnBoard(move, col - 1) &&
-               !isEmptyLoc(board.findPiece(move, col - 1)) &&
-               checkIfTakable(board.findPiece(move, col - 1))){
+               !isEmptyLoc(board.getPiece(move, col - 1)) &&
+               checkIfTakable(board.getPiece(move, col - 1))){
                 validMoves.push({'piece': pieceLoc.piece.piece,
                                  'pieceLoc':pieceLoc.location,
                                  'moveDir': (direction > 0) ? 1 : 7,
@@ -230,7 +230,7 @@ var moveCalculationUtility = (function (){
 
                 if(checkOnBoard(posX, posY))
                 {
-                    var moveLoc = board.findPiece(posX, posY);
+                    var moveLoc = board.getPiece(posX, posY);
                     if(isEmptyLoc(moveLoc) || checkIfTakable(moveLoc)) {
                         validMoves.push({'piece': pieceLoc.piece.piece,
                                          'pieceLoc':pieceLoc.location,
@@ -293,7 +293,7 @@ var moveCalculationUtility = (function (){
                 {
                     var moveDir = determineMoveDirection(row - posX, col - posY);
 
-                    var moveLoc = board.findPiece(posX, posY);
+                    var moveLoc = board.getPiece(posX, posY);
                     if(isEmptyLoc(moveLoc) || checkIfTakable(moveLoc)) {
                         validMoves.push({'piece': pieceLoc.piece.piece,
                                          'pieceLoc':pieceLoc.location,
