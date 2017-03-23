@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Chess Move Calculator</title>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row" id="instructions">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h4>How to use:</h4>
+                    <div>
+                        <p>
+                            The input for this application uses a modified version of Forsyth–Edwards Notation(FEN) to repersent the current state of the chess board.
+                        </p>
+                        <p>
+                            A valid FEN string for this application does not need to include the Castling availability, En passant, Halfmove clock, or Fullmove number in it.
+                        </p>
+                        <p>
+                            Example of a valid FEN string for the application: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w
+                        </p>
+                        <p>
+                            <a href="https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation">Information about FEN strings and how to make them</a>
+                        </p>
+                        <p>
+                            <a href="https://nextchessmove.com/">Online tool to visually make FEN strings</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="fenInput">
+                <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12">
+                    <input type="text" name="fen" id="fenStr"><button type="button" id="fenSubmit">submit</button>
+                </div>
+            </div>
+            <div class="row col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12">
+                <div class="resultsHeader"><h4>Results:</h4><div>
+                <div id="valid-move-display"></div>
+            </div>
+        </div>
+        <script type="text/javascript" src="app.js" charset="utf-8"></script>
+    </body>
+</html>

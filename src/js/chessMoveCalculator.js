@@ -1,14 +1,17 @@
 "use strict";
 var $ = require('jQuery');
-var board = require('./board');
+var chessBoard = require('./chessBoard');
+var BG = require('./boardGlobals');
+var CBH = require('./chessBoardHelper');
 
-var chessMoveCalculator = (function () {
-    var chessBoard;
 
+var chessMoveCalculator = function() {
+    var board = null;
     var init = function() {
-        chessBoard = new board();
-        chessBoard.createBoard();
-        chessBoard.printBoard();
+        board = new chessBoard();
+        board.createBoard();
+        //board.loadFen(BG.DEFAULT_BOARD);
+        //board.getValidMoves();
 
         initDisplay();
     };
@@ -21,27 +24,27 @@ var chessMoveCalculator = (function () {
         var resultsDiv = $('#valid-move-display');
         var fenStr = $('#fenStr').val();
         var validMoves;
-        var validFen = chessBoard.validateFEN(fenStr);
 
         resultsDiv.html('');
-        if(validFen.isValid) {
-            chessBoard.clearBoard();
-            chessBoard.loadFen(fenStr);
-            chessBoard.printBoard();
-            validMoves = chessBoard.caluclateValidMovesHR();
-            resultsDiv.append('<div>Current turn is : ' + chessBoard.currentTurn() + '</div>');
 
+        var fenCheck = board.loadFen(fenStr);
+
+        if(fenCheck.errString) {
+            resultsDiv.append('<div>Given FEN string is not valid : ' + fenCheck.errString + '</div>');
+        } else {
+            validMoves = board.caluclateValidMovesHR();
+            resultsDiv.append('<div>Current turn is : ' + board.getCurrentTurn() + '</div>');
             for(var i = 0; i < validMoves.length; i++){
                 resultsDiv.append('<div>' + validMoves[i] + '</div>');
             }
-        } else {
-            resultsDiv.append('<div>Given FEN string is not valid : ' + validFen.errString + '</div>');
         }
-
     };
 
-    return {init:init};
-})();
+
+    return {
+        init: init
+    };
+}();
 
 module.exports = chessMoveCalculator;
 
